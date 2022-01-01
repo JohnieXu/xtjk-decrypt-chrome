@@ -1,0 +1,20 @@
+.x-tab {
+  &__options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border: 1px solid blueviolet;
+    cursor: pointer;
+    &__item {
+      // flex: 0 0 auto;
+      flex: 1;
+      text-align: center;
+      transition: all 0.2s ease-in-out;
+      &.active {
+        background: blueviolet;
+        color: #fff;
+      }
+    }
+  }
+}

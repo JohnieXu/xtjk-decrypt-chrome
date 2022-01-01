@@ -1,0 +1,97 @@
+// common class
+.w-full {
+  width: 100%;
+}
+.mt-10 {
+  margin-top: 10px;
+}
+.m-10 {
+  margin: 10px;
+}
+.mt-15 {
+  margin-top: 15px;
+}
+.m-15 {
+  margin: 15px;
+}
+.mt-20 {
+  margin-top: 20px;
+}
+.m-20 {
+  margin: 20px;
+}
+.pt-10 {
+  padding-top: 10px;
+}
+.p-10 {
+  padding: 10px;
+}
+.pt-15 {
+  padding-top: 15px;
+}
+.p-15 {
+  padding: 15px;
+}
+.pt-20 {
+  padding-top: 20px;
+}
+.p-20 {
+  padding: 20px;
+}
+
+.clearfix {
+  &::after {
+    display: table;
+    content: '';
+    clear: both;
+    width: 0;
+    height: 0;
+  }
+}
+
+.App {
+  // position: absolute;
+  // top: 0px;
+  // bottom: 0px;
+  // left: 0px;
+  // right: 0px;
+  text-align: center;
+  height: 100%;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.appkey {
+  outline-color: blueviolet;
+}
+
+.data {
+  outline-color: blueviolet;
+  &::focus-visible {
+  }
+}
+
+.result {
+  margin: 0;
+  word-break: break-all;
+  text-align: left;
+  color: #333;
+  white-space: break-spaces;
+  background: lighten(blueviolet, 42%);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.start {
+  background: blueviolet;
+  outline: none;
+  border: none;
+  color: #fff;
+  padding: 6px 40px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+  &:active {
+    background: darken(blueviolet, 5%);
+  }
+}
