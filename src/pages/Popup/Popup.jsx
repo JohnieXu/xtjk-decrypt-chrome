@@ -43,6 +43,14 @@ const Popup = () => {
     setType(name)
   }
 
+  const handleOpenClick = () => {
+    console.log('sendMessage')
+    chrome.runtime.sendMessage({
+      action: 'open',
+      url: 'https://yfzx.whty.com.cn/fakebank/'
+    })
+  }
+
   // TODO:
   const toast = (msg) => {
     msg && window.alert(msg)

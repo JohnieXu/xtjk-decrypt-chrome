@@ -26,7 +26,7 @@
         "icon-34.png",
         "popup.html"
       ],
-      "matches": []
+      "matches": ["http://*/*", "https://*/*", "<all_urls>"]
     }
   ],
   "permissions": ["contextMenus", "storage"],
