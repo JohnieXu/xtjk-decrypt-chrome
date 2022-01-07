@@ -5,7 +5,7 @@ export const open = (url = chrome.runtime.getURL('popup.html')) => {
   el.id = iframeId;
   el.style.position = 'fixed';
   el.style.right = '10px';
-  el.style.top = '135px';
+  el.style.top = '140px';
   el.style.width = '300px';
   el.style.height = '400px';
   el.style.border = 'none';

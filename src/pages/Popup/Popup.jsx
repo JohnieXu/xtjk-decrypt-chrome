@@ -4,14 +4,65 @@ import XTab from '../../components/Tab';
 import logo from '../../assets/img/logo.svg';
 import './Popup.scss';
 
+function saveAppKey(appkey) {
+  const APPKEY_KEY = 'appkey'
+  return new Promise((resolve, reject) => {
+    if (appkey) {
+      chrome.storage.sync.get({
+        [APPKEY_KEY]: []
+      }, (result) => {
+        console.log(result)
+        let keys = result[APPKEY_KEY]
+        if (!keys.includes(appkey)) {
+          keys = [...keys, appkey]
+        }
+        console.log('[debug] keys', keys)
+        chrome.storage.sync.set({
+          [APPKEY_KEY]: keys
+        }, () => {
+          resolve()
+        })
+      })
+    } else {
+      resolve()
+    }
+  })
+}
+
+function getAppKey() {
+  const APPKEY_KEY = 'appkey'
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get({
+      [APPKEY_KEY]: []
+    }, (result) => {
+      let keys = result[APPKEY_KEY]
+      console.log('[debug] keys', keys)
+      resolve(keys)
+    })
+  })
+}
+
 const Popup = () => {
   const [result, setResult] = useState("");
-  const [appkey, setAppkey] = useState("1");
+  const [appkey, setAppkey] = useState("");
   const [data, setData] = useState("{\na: 'a'\n}");
   const [type, setType] = useState("a");
 
+  // 本地存储的 appkey 列表
+  const [appkeyList, setAppkeyList] = useState([]);
+
+  useEffect(() => {
+    getAppKey().then((keys) => {
+      setAppkeyList(keys)
+      setAppkey(keys[keys.length - 1] || "")
+    }).catch((e) => {
+      console.error(e)
+    })
+  }, [])
+
   const handleButtonClick = () => {
     if (appkey && data) {
+      saveAppKey(appkey)
       try {
         let _data = null
         switch(type) {
