@@ -4,8 +4,10 @@ import XTab from '../../components/Tab';
 import logo from '../../assets/img/logo.svg';
 import './Popup.scss';
 
+const CONST_APPKEY_KEY = 'appkey'
+
 function saveAppKey(appkey) {
-  const APPKEY_KEY = 'appkey'
+  const APPKEY_KEY = CONST_APPKEY_KEY
   return new Promise((resolve, reject) => {
     if (appkey) {
       chrome.storage.sync.get({
@@ -30,13 +32,13 @@ function saveAppKey(appkey) {
 }
 
 function getAppKey() {
-  const APPKEY_KEY = 'appkey'
+  const APPKEY_KEY = CONST_APPKEY_KEY
   return new Promise((resolve, reject) => {
     chrome.storage.sync.get({
       [APPKEY_KEY]: []
     }, (result) => {
       let keys = result[APPKEY_KEY]
-      console.log('[debug] keys', keys)
+      console.log('[debug] getAppKey keys', keys)
       resolve(keys)
     })
   })
@@ -51,14 +53,16 @@ const Popup = () => {
   // 本地存储的 appkey 列表
   const [appkeyList, setAppkeyList] = useState([]);
 
-  useEffect(() => {
+  const refreshAppkeyList = () => {
     getAppKey().then((keys) => {
       setAppkeyList(keys)
       setAppkey(keys[keys.length - 1] || "")
     }).catch((e) => {
       console.error(e)
     })
-  }, [])
+  }
+
+  useEffect(refreshAppkeyList, [])
 
   const handleButtonClick = () => {
     if (appkey && data) {
@@ -82,6 +86,7 @@ const Popup = () => {
         //   throw new Error('加解密失败')
         // }
         setResult(_data)
+        refreshAppkeyList()
       } catch (e) {
         setResult("")
         toast(e.message)
@@ -92,6 +97,13 @@ const Popup = () => {
 
   const handleUpdateActive = (name) => {
     setType(name)
+  }
+
+  const handleAppkeyChange = (e) => {
+    const appkey = e.target.value
+    if (appkey) {
+      setAppkey(appkey)
+    }
   }
 
   const handleOpenClick = () => {
@@ -123,6 +135,14 @@ const Popup = () => {
         { name: 'a', title: '加密' },
         { name: 'b', title: '解密' }
       ]} onUpdateActive={handleUpdateActive}></XTab>
+      <select className="appkeyList mt-10 w-full" onChange={handleAppkeyChange}>
+        <option value="">请选择秘钥</option>
+        {
+          appkeyList.map((key, index) => (
+            <option value={key}>{index + 1}.{key}</option>
+          ))
+        }
+      </select>
       <input className="appkey mt-10 w-full" type="text" name="appkey" placeholder="请填写秘钥" value={appkey} onChange={(e) => {
         setAppkey(e.target.value)
       }}/>
