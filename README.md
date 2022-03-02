@@ -151,3 +151,7 @@ ApiCall({ key: secrets.key });
 Michael Xieyang Liu | [Website](https://lxieyang.github.io)
 
 https://github.com/lxieyang/chrome-extension-boilerplate-react
+
+## Screenshots
+
+![popup.png](screenshots/popup.png)
