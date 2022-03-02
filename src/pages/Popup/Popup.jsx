@@ -89,7 +89,7 @@ const Popup = () => {
         refreshAppkeyList()
       } catch (e) {
         setResult("")
-        toast(e.message)
+        toast(e.message, '加解密报错')
         console.error(e)
       }
     }
@@ -115,8 +115,8 @@ const Popup = () => {
   }
 
   // TODO:
-  const toast = (msg) => {
-    msg && window.alert(msg)
+  const toast = (msg, title = '提示') => {
+    msg && window.alert(`${title}\n${msg}`)
   }
 
   const stringifyResult = (res) => {
