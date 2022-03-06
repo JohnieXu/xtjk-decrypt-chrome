@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { encrypt, decrypt } from 'decrypt-core';
+import { Toast } from 'react-vant';
+import { encrypt, decrypt, isEncryptedData } from 'decrypt-core';
 import XTab from '../../components/Tab';
 import logo from '../../assets/img/logo.svg';
 import './Popup.scss';
@@ -65,6 +66,10 @@ const Popup = () => {
   useEffect(refreshAppkeyList, [])
 
   const handleButtonClick = () => {
+    if (type === 'b' && !isEncryptedData(data)) {
+      Toast('要解密的数据不符合加密数据格式，请检查')
+      return
+    }
     if (appkey && data) {
       saveAppKey(appkey)
       try {
