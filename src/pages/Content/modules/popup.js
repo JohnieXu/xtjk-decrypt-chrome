@@ -6,8 +6,8 @@ export const open = (url = chrome.runtime.getURL('popup.html')) => {
   el.style.position = 'fixed';
   el.style.right = '10px';
   el.style.top = '140px';
-  el.style.width = '300px';
-  el.style.height = '400px';
+  el.style.width = '400px';
+  el.style.height = '600px';
   el.style.border = 'none';
   el.style.zIndex = 9999;
   el.style.background = '#fff';

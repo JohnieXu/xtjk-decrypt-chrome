@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Toast } from 'react-vant';
 import { encrypt, decrypt, isEncryptedData } from 'decrypt-core';
+import XHeader from '../../components/Header';
 import XTab from '../../components/Tab';
 import logo from '../../assets/img/logo.svg';
 import './Popup.scss';
@@ -119,6 +120,10 @@ const Popup = () => {
     })
   }
 
+  const handleSizeChange = (size) => {
+    console.log(size)
+  }
+
   // TODO:
   const toast = (msg, title = '提示') => {
     msg && window.alert(`${title}\n${msg}`)
@@ -136,6 +141,7 @@ const Popup = () => {
 
   return (
     <div className="App">
+      <XHeader onSizeChange={handleSizeChange} />
       <XTab active={type} options={[
         { name: 'a', title: '加密' },
         { name: 'b', title: '解密' }
