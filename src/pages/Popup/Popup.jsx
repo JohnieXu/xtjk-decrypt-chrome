@@ -7,6 +7,7 @@ import logo from '../../assets/img/logo.svg';
 import './Popup.scss';
 
 const CONST_APPKEY_KEY = 'appkey'
+const MESSAGE_LISTEN_TYPE = '36cfdd19__xtjk_decrypt_message_size';
 
 function saveAppKey(appkey) {
   const APPKEY_KEY = CONST_APPKEY_KEY
@@ -122,6 +123,8 @@ const Popup = () => {
 
   const handleSizeChange = (size) => {
     console.log(size)
+    debugger;
+    window.top.postMessage({ type: MESSAGE_LISTEN_TYPE, body: size }, '*')
   }
 
   // TODO:
