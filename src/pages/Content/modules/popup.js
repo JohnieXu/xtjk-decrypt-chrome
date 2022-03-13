@@ -42,7 +42,7 @@ export const open = (url = chrome.runtime.getURL('popup.html')) => {
   el.style.width = '400px';
   el.style.height = '600px';
   el.style.border = 'none';
-  el.style.zIndex = 9999;
+  el.style.zIndex = 1000000000001;
   el.style.background = '#fff';
   el.style.boxShadow = '0px 0px 10px rgb(0 0 0 / 10%)';
   el.style.borderRadius = '6px';
