@@ -3,7 +3,6 @@ import { Toast } from 'react-vant';
 import { encrypt, decrypt, isEncryptedData } from 'decrypt-core';
 import XHeader from '../../components/Header';
 import XTab from '../../components/Tab';
-import logo from '../../assets/img/logo.svg';
 import './Popup.scss';
 
 const CONST_APPKEY_KEY = 'appkey'
@@ -113,17 +112,7 @@ const Popup = () => {
     }
   }
 
-  const handleOpenClick = () => {
-    console.log('sendMessage')
-    chrome.runtime.sendMessage({
-      action: 'open',
-      url: 'https://yfzx.whty.com.cn/fakebank/'
-    })
-  }
-
   const handleSizeChange = (size) => {
-    console.log(size)
-    debugger;
     window.top.postMessage({ type: MESSAGE_LISTEN_TYPE, body: size }, '*')
   }
 
@@ -163,7 +152,6 @@ const Popup = () => {
       <textarea className="data mt-10 w-full" name="data" id="" cols="30" rows="10" placeholder="请填写数据" value={data} onChange={(e) => {
         setData(e.target.value)
       }}></textarea>
-      {/* <input type="textarea" className="data" placeholder="请填写密文数据" /> */}
       {resultStr && (
         <pre className="result mt-10 p-10">{resultStr}</pre>
       )}
