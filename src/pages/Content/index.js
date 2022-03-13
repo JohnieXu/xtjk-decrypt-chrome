@@ -5,7 +5,6 @@ import {
 } from './modules/popup';
 
 const MESSAGE_LISTEN_TYPE = '36cfdd19__xtjk_decrypt_message_size';
-let iframe = null;
 
 /**
  * 向页面添加打开插件页面的按钮
@@ -13,6 +12,7 @@ let iframe = null;
  */
 function addButton() {
   let opened = false;
+  let iframe = null;
   let messageHandler = (size) => {
     setIframeSize(iframe, size);
   };
@@ -41,7 +41,7 @@ function addButton() {
           type: MESSAGE_LISTEN_TYPE,
           handler: messageHandler,
         });
-        openPopup();
+        iframe = openPopup();
       }
     };
     document.body.appendChild(el);
@@ -80,7 +80,7 @@ function removeMessageListen({ handler } = {}) {
   }
 }
 
-iframe = addButton()();
+addButton()();
 
 chrome.runtime.onMessage.addListener((message, sender) => {
   console.log(message, sender, message.data);
