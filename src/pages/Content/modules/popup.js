@@ -29,26 +29,40 @@ const IFRAME_STYLE = {
 };
 
 /**
- * 打开 iframe 窗口
+ * 判断 iframe 是否已创建
+ * @returns [isExits, iframeElement]
+ */
+const iframeExist = () => {
+  const el = document.getElementById(IFRAME_ID);
+  return [!!el, el];
+};
+
+/**
+ * 打开 iframe 窗口，若不存在则创建，否则显示已存在的 iframe
  * @param {String} url url
  * @returns HTMLElement
  */
 export const open = (url = chrome.runtime.getURL('popup.html')) => {
-  const el = document.createElement('iframe');
-  el.id = IFRAME_ID;
-  el.style.position = 'fixed';
-  el.style.right = '10px';
-  el.style.top = '140px';
-  el.style.width = '400px';
-  el.style.height = '600px';
-  el.style.border = 'none';
-  el.style.zIndex = 1000000000001;
-  el.style.background = '#fff';
-  el.style.boxShadow = '0px 0px 10px rgb(0 0 0 / 10%)';
-  el.style.borderRadius = '6px';
-  el.style.transition = 'all 0.2s ease';
-  el.src = url;
-  document.body.appendChild(el);
+  let [exist, el] = iframeExist();
+  if (exist) {
+    toggle(false);
+  } else {
+    el = document.createElement('iframe');
+    el.id = IFRAME_ID;
+    el.style.position = 'fixed';
+    el.style.right = '10px';
+    el.style.top = '140px';
+    el.style.width = '400px';
+    el.style.height = '600px';
+    el.style.border = 'none';
+    el.style.zIndex = 1000000000001;
+    el.style.background = '#fff';
+    el.style.boxShadow = '0px 0px 10px rgb(0 0 0 / 10%)';
+    el.style.borderRadius = '6px';
+    el.style.transition = 'all 0.2s ease';
+    el.src = url;
+    document.body.appendChild(el);
+  }
   return el;
 };
 
@@ -56,9 +70,21 @@ export const open = (url = chrome.runtime.getURL('popup.html')) => {
  * 关闭 iframe 窗口
  */
 export const close = () => {
-  const el = document.getElementById(IFRAME_ID);
-  if (el) {
+  const [exist, el] = iframeExist();
+  if (exist) {
     document.body.removeChild(el);
+  }
+};
+
+/**
+ * 切换 iframe 窗口显隐
+ * @param {Boolean} isHide 是否隐藏
+ */
+export const toggle = (isHide) => {
+  const [exist, el] = iframeExist();
+  const display = isHide ? 'none' : 'block';
+  if (exist) {
+    el.style.display = display;
   }
 };
 
