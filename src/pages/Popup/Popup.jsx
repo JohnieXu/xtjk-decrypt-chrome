@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Toast } from 'react-vant';
 import { encrypt, decrypt, isEncryptedData } from 'decrypt-core';
+import XHeader from '../../components/Header';
 import XTab from '../../components/Tab';
 import XSideMenu from '../../components/SideMenu';
 import logo from '../../assets/img/logo.svg';
 import './Popup.scss';
 
-const CONST_APPKEY_KEY = 'appkey'
 const MENUS = [
   {
     name: 'encrypt',
@@ -25,6 +25,9 @@ const MENUS = [
     label: '星标管理'
   }
 ]
+
+const CONST_APPKEY_KEY = 'appkey'
+const MESSAGE_LISTEN_TYPE = '36cfdd19__xtjk_decrypt_message_size';
 
 function saveAppKey(appkey) {
   const APPKEY_KEY = CONST_APPKEY_KEY
@@ -130,12 +133,8 @@ const Popup = () => {
     }
   }
 
-  const handleOpenClick = () => {
-    console.log('sendMessage')
-    chrome.runtime.sendMessage({
-      action: 'open',
-      url: 'https://yfzx.whty.com.cn/fakebank/'
-    })
+  const handleSizeChange = (size) => {
+    window.top.postMessage({ type: MESSAGE_LISTEN_TYPE, body: size }, '*')
   }
 
   // TODO:
@@ -155,12 +154,13 @@ const Popup = () => {
 
   return (
     <div className="App">
-      <header>
+      <XHeader onSizeChange={handleSizeChange} />
+      <div>
         <XTab active={type} options={[
           { name: 'a', title: '加密' },
           { name: 'b', title: '解密' }
         ]} onUpdateActive={handleUpdateActive}></XTab>
-      </header>
+      </div>
       <div style={{ width: '100px' }}>
         <XSideMenu menus={MENUS} />
       </div>
@@ -178,7 +178,6 @@ const Popup = () => {
       <textarea className="data mt-10 w-full" name="data" id="" cols="30" rows="10" placeholder="请填写数据" value={data} onChange={(e) => {
         setData(e.target.value)
       }}></textarea>
-      {/* <input type="textarea" className="data" placeholder="请填写密文数据" /> */}
       {resultStr && (
         <pre className="result mt-10 p-10">{resultStr}</pre>
       )}

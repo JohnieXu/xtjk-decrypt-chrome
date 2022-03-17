@@ -1,13 +1,21 @@
-import { printLine } from './modules/print';
-import { open as openPopup, close as closePopup } from './modules/popup';
+import {
+  open as openPopup,
+  close as closePopup,
+  setIframeSize,
+} from './modules/popup';
 
-console.log('Content script works!');
-console.log('Must reload extension for modifications to take effect.');
+const MESSAGE_LISTEN_TYPE = '36cfdd19__xtjk_decrypt_message_size';
 
-printLine("Using the 'printLine' function from the Print Module");
-
+/**
+ * 向页面添加打开插件页面的按钮
+ * @returns iframe
+ */
 function addButton() {
   let opened = false;
+  let iframe = null;
+  let messageHandler = (size) => {
+    setIframeSize(iframe, size);
+  };
   return function _addButton() {
     let el = document.createElement('button');
     el.innerHTML = 'xtjk-decrypt';
@@ -25,14 +33,51 @@ function addButton() {
     el.onclick = () => {
       if (opened) {
         opened = false;
+        removeMessageListen({ handler: messageHandler });
         closePopup();
       } else {
         opened = true;
-        openPopup();
+        addMessageListen({
+          type: MESSAGE_LISTEN_TYPE,
+          handler: messageHandler,
+        });
+        iframe = openPopup();
       }
     };
     document.body.appendChild(el);
+    return el;
   };
+}
+
+/**
+ * 添加处理 iframe 消息监听
+ * @param {Object} param0
+ * @param {String} param0.type 消息类型
+ * @param {Function} param0.handler 监听器
+ */
+function addMessageListen({ type, handler } = {}) {
+  debugger;
+  window.addEventListener('message', (e) => {
+    console.log(e);
+    const {
+      data: { type: _type, body },
+    } = e;
+    if (type === _type && handler) {
+      handler(body);
+    }
+  });
+}
+
+/**
+ * 移除处理 iframe 消息监听
+ * @param {Object} param0
+ * @param {String} param0.type 消息类型
+ * @param {Function} param0.handler 监听器
+ */
+function removeMessageListen({ handler } = {}) {
+  if (handler) {
+    window.removeEventListener('message', handler);
+  }
 }
 
 addButton()();
