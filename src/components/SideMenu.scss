@@ -1,0 +1,21 @@
+.x-side-menu {
+  display: flex;
+  flex: 0 0 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  &__item {
+    box-sizing: border-box;
+    width: 100%;
+    line-height: 1;
+    padding: 10px;
+    background: #fff;
+    color: #333;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    &--active {
+      background: blueviolet;
+      color: #fff;
+    }
+  }
+}

@@ -2,10 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { Toast } from 'react-vant';
 import { encrypt, decrypt, isEncryptedData } from 'decrypt-core';
 import XTab from '../../components/Tab';
+import XSideMenu from '../../components/SideMenu';
 import logo from '../../assets/img/logo.svg';
 import './Popup.scss';
 
 const CONST_APPKEY_KEY = 'appkey'
+const MENUS = [
+  {
+    name: 'encrypt',
+    label: '加解密'
+  },
+  {
+    name: 'history',
+    label: '历史记录'
+  },
+  {
+    name: 'keyManage',
+    label: '秘钥管理'
+  },
+  {
+    name: 'favorite',
+    label: '星标管理'
+  }
+]
 
 function saveAppKey(appkey) {
   const APPKEY_KEY = CONST_APPKEY_KEY
@@ -136,10 +155,15 @@ const Popup = () => {
 
   return (
     <div className="App">
-      <XTab active={type} options={[
-        { name: 'a', title: '加密' },
-        { name: 'b', title: '解密' }
-      ]} onUpdateActive={handleUpdateActive}></XTab>
+      <header>
+        <XTab active={type} options={[
+          { name: 'a', title: '加密' },
+          { name: 'b', title: '解密' }
+        ]} onUpdateActive={handleUpdateActive}></XTab>
+      </header>
+      <div style={{ width: '100px' }}>
+        <XSideMenu menus={MENUS} />
+      </div>
       <select className="appkeyList mt-10 w-full" onChange={handleAppkeyChange}>
         <option value="">请选择秘钥</option>
         {
