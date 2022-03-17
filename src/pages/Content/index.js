@@ -56,13 +56,12 @@ function addButton() {
  * @param {Function} param0.handler 监听器
  */
 function addMessageListen({ type, handler } = {}) {
-  debugger;
   window.addEventListener('message', (e) => {
-    console.log(e);
     const {
       data: { type: _type, body },
     } = e;
     if (type === _type && handler) {
+      console.log(e);
       handler(body);
     }
   });
