@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './SideMenu.scss';
 
 export interface MenuItem {
   name: string
   label: string
-  to?: string
+  to?: string | boolean | undefined
 }
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
 
 function SideMenu({ menus = [], onChange }: Props) {
   const [active, setActive] = useState(null);
+  const navigate = useNavigate();
 
   // 默认选中第一个
   useEffect(() => {
@@ -26,6 +28,11 @@ function SideMenu({ menus = [], onChange }: Props) {
     setActive(menuItem.name as any);
     if (onChange) {
       onChange(menuItem);
+    }
+    if (menuItem.to === true) {
+      navigate(`/${menuItem.name}`)
+    } else if (menuItem.to) {
+      navigate(`/${menuItem.to}`)
     }
   }
   

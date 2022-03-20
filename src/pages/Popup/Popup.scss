@@ -104,3 +104,37 @@
     background: darken(blueviolet, 5%);
   }
 }
+
+.notfound {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .info {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 50px;
+  }
+}
+
+.app {
+  padding: 12px;
+  .main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .menu {
+    width: 100px;
+    flex: 0 0 100px;
+    min-height: 90vh;
+    box-shadow: 5px 0 5px rgba(0, 0, 0, 0.02);
+  }
+  .body {
+    flex: 1;
+    margin-left: 12px;
+  }
+}
