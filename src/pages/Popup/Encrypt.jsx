@@ -1,48 +1,8 @@
 import React, { useState } from 'react';
 import { encrypt, decrypt, isEncryptedData } from 'decrypt-core';
-import { Toast } from 'react-vant';
+import { Toast, hooks } from 'react-vant';
+import { getAppKey, saveAppKey } from './common/storage';
 import XTab from '../../components/Tab';
-
-const CONST_APPKEY_KEY = 'appkey'
-const MESSAGE_LISTEN_TYPE = '36cfdd19__xtjk_decrypt_message_size';
-
-function saveAppKey(appkey) {
-  const APPKEY_KEY = CONST_APPKEY_KEY
-  return new Promise((resolve, reject) => {
-    if (appkey) {
-      chrome.storage.sync.get({
-        [APPKEY_KEY]: []
-      }, (result) => {
-        console.log(result)
-        let keys = result[APPKEY_KEY]
-        if (!keys.includes(appkey)) {
-          keys = [...keys, appkey]
-        }
-        console.log('[debug] keys', keys)
-        chrome.storage.sync.set({
-          [APPKEY_KEY]: keys
-        }, () => {
-          resolve()
-        })
-      })
-    } else {
-      resolve()
-    }
-  })
-}
-
-function getAppKey() {
-  const APPKEY_KEY = CONST_APPKEY_KEY
-  return new Promise((resolve, reject) => {
-    chrome.storage.sync.get({
-      [APPKEY_KEY]: []
-    }, (result) => {
-      let keys = result[APPKEY_KEY]
-      console.log('[debug] getAppKey keys', keys)
-      resolve(keys)
-    })
-  })
-}
 
 const Encrypt = () => {
   const [result, setResult] = useState("");
@@ -53,7 +13,7 @@ const Encrypt = () => {
   // 本地存储的 appkey 列表
   const [appkeyList, setAppkeyList] = useState([]);
 
-  const refreshAppkeyList = () => {
+  const loadAppkeyList = () => {
     getAppKey().then((keys) => {
       setAppkeyList(keys)
       setAppkey(keys[keys.length - 1] || "")
@@ -88,7 +48,7 @@ const Encrypt = () => {
         //   throw new Error('加解密失败')
         // }
         setResult(_data)
-        refreshAppkeyList()
+        loadAppkeyList()
       } catch (e) {
         setResult("")
         toast(e.message, '加解密报错')
@@ -121,6 +81,8 @@ const Encrypt = () => {
   }
 
   const resultStr = stringifyResult(result)
+
+  hooks.useMount(loadAppkeyList);
 
   return (
     <div className='encrypt'>
