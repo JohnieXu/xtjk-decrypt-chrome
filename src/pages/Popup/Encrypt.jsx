@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { encrypt, decrypt, isEncryptedData } from 'decrypt-core';
-import { Toast, hooks, Field, Cell } from 'react-vant';
+import { Toast, hooks, Field, Cell, Popup, Picker, Button } from 'react-vant';
 import { getAppKey, saveAppKey } from './common/storage';
 import XTab from '../../components/Tab';
 
@@ -11,14 +11,17 @@ const Encrypt = () => {
   const [appkey, setAppkey] = useState("");
   const [data, setData] = useState("{\na: 'a'\n}");
   const [type, setType] = useState("a");
+  const [showAppkeyPicker, setShowAppkeyPicker] = useState(false);
 
   // 本地存储的 appkey 列表
   const [appkeyList, setAppkeyList] = useState([]);
 
-  const loadAppkeyList = () => {
+  const loadAppkeyList = (setLast) => {
     getAppKey().then((keys) => {
       setAppkeyList(keys)
-      setAppkey(keys[keys.length - 1] || "")
+      if (setLast) {
+        setAppkey(keys[keys.length - 1] || "")
+      }
     }).catch((e) => {
       console.error(e)
     })
@@ -50,7 +53,7 @@ const Encrypt = () => {
         //   throw new Error('加解密失败')
         // }
         setResult(_data)
-        loadAppkeyList()
+        loadAppkeyList(false)
       } catch (e) {
         setResult("")
         toast(e.message, '加解密报错')
@@ -61,13 +64,6 @@ const Encrypt = () => {
 
   const handleUpdateActive = (name) => {
     setType(name)
-  }
-
-  const handleAppkeyChange = (e) => {
-    const appkey = e.target.value
-    if (appkey) {
-      setAppkey(appkey)
-    }
   }
 
   const toast = (msg, title = '提示') => {
@@ -84,59 +80,68 @@ const Encrypt = () => {
 
   const resultStr = stringifyResult(result)
 
-  hooks.useMount(loadAppkeyList);
+  hooks.useMount(() => { loadAppkeyList(true); });
 
   return (
     <div className='encrypt'>
-      <XTab active={type} options={[
-        { name: 'a', title: '加密' },
-        { name: 'b', title: '解密' }
-      ]} onUpdateActive={handleUpdateActive}></XTab>
-      <select className="appkeyList mt-10 w-full" onChange={handleAppkeyChange}>
-        <option value="">请选择秘钥</option>
-        {
-          appkeyList.map((key, index) => (
-            <option value={key} key={key}>{index + 1}.{key}</option>
-          ))
-        }
-      </select>
-      <input className="appkey mt-10 w-full" type="text" name="appkey" placeholder="请填写秘钥" value={appkey} onChange={(e) => {
-        setAppkey(e.target.value)
-      }}/>
-      <textarea className="data mt-10 w-full" name="data" id="" cols="30" rows="10" placeholder="请填写数据" value={data} onChange={(e) => {
-        setData(e.target.value)
-      }}></textarea>
-      {resultStr && (
-        <pre className="result mt-10 p-10">{resultStr}</pre>
-      )}
-      <button className="start mt-10 clearfix" onClick={handleButtonClick}>开始</button>
+      <Cell.Group card className="encrypt-section1">
+        <XTab active={type} options={[
+          { name: 'a', title: '加密' },
+          { name: 'b', title: '解密' }
+        ]} onUpdateActive={handleUpdateActive}></XTab>
+      </Cell.Group>
       <div className='encrypt-setion2'>
-        <Cell.Group card>
-          <Cell title="秘钥" label="请选择秘钥" isLink size="small">
-            <div>{appkey}</div>
+        <Cell.Group card className="input-box">
+          <Cell title="秘钥" label="请选择秘钥" isLink size="small" onClick={() => setShowAppkeyPicker(true)}>
+            <Field
+              value={appkey}
+              readonly
+            ></Field>
           </Cell>
           <Cell title="秘钥" label="请填写秘钥" size="small">
             <Field
+            type="textarea"
               value={appkey}
               clearable
               required
-              placeholder='请填写秘钥'
+              placeholder="请填写秘钥"
               onChange={setAppkey}
             ></Field>
           </Cell>
           <Cell title="数据" label="请填写数据" size="small">
             <Field
-              type='textarea'
+              type="textarea"
               autosize
               required
               clearable
               value={data}
-              placeholder='请填写数据'
+              placeholder="请填写数据"
               onChange={setData}
+            ></Field>
+          </Cell>
+          <Cell>
+            <Button type="primary" size="small" block round onClick={handleButtonClick}>开始</Button>
+          </Cell>
+          <Cell title="结果">
+            <Field
+              type="textarea"
+              autosize
+              value={resultStr}
             ></Field>
           </Cell>
         </Cell.Group>
       </div>
+      <Popup round visible={showAppkeyPicker} position="top" onClose={() => setShowAppkeyPicker(false)}>
+        <Picker
+          title="选择秘钥"
+          columns={appkeyList}
+          onConfirm={(value) => {
+            setAppkey(value);
+            setShowAppkeyPicker(false);
+          }}
+          onCancel={() => setShowAppkeyPicker(false)}
+        ></Picker>
+      </Popup>
     </div>
   )
 }

@@ -4,6 +4,21 @@ $background-color: rgb(247, 248, 250);
   background: $background-color;
 }
 
+.encrypt-section1 {
+  .rv-cell-group {
+    padding: 12px;
+    background: transparent;
+  }
+}
+
 .encrypt-setion2 {
   margin-top: 12px;
+  .input-box {
+    .rv-cell__title {
+      flex: 0 0 60px;
+    }
+    .rv-cell__value {
+      word-break: break-all;
+    }
+  }
 }
