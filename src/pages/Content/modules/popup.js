@@ -11,6 +11,7 @@ const IFRAME_STYLE = {
     top: '140px',
     width: '400px',
     height: '600px',
+    borderRadius: '6px',
   },
   wide: {
     position: 'fixed',
@@ -18,6 +19,7 @@ const IFRAME_STYLE = {
     top: '140px',
     width: '800px',
     height: '600px',
+    borderRadius: '6px',
   },
   full: {
     position: 'fixed',
@@ -25,6 +27,7 @@ const IFRAME_STYLE = {
     top: '0px',
     width: '100%',
     height: '100%',
+    borderRadius: '0px',
   },
 };
 
