@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { encrypt, decrypt, isEncryptedData } from 'decrypt-core';
-import { Toast, hooks } from 'react-vant';
+import { Toast, hooks, Field, Cell } from 'react-vant';
 import { getAppKey, saveAppKey } from './common/storage';
 import XTab from '../../components/Tab';
+
+import './Encrypt.scss';
 
 const Encrypt = () => {
   const [result, setResult] = useState("");
@@ -108,6 +110,33 @@ const Encrypt = () => {
         <pre className="result mt-10 p-10">{resultStr}</pre>
       )}
       <button className="start mt-10 clearfix" onClick={handleButtonClick}>开始</button>
+      <div className='encrypt-setion2'>
+        <Cell.Group card>
+          <Cell title="秘钥" label="请选择秘钥" isLink size="small">
+            <div>{appkey}</div>
+          </Cell>
+          <Cell title="秘钥" label="请填写秘钥" size="small">
+            <Field
+              value={appkey}
+              clearable
+              required
+              placeholder='请填写秘钥'
+              onChange={setAppkey}
+            ></Field>
+          </Cell>
+          <Cell title="数据" label="请填写数据" size="small">
+            <Field
+              type='textarea'
+              autosize
+              required
+              clearable
+              value={data}
+              placeholder='请填写数据'
+              onChange={setData}
+            ></Field>
+          </Cell>
+        </Cell.Group>
+      </div>
     </div>
   )
 }
