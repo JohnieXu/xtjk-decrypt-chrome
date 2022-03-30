@@ -1,7 +1,16 @@
+@mixin sticky-top($top: 12px) {
+  position: sticky;
+  top: $top;
+  background: #fff;
+  z-index: 2;
+}
+
 .x-header {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  padding-top: 12px;
+  @include sticky-top(0);
   &__icon {
     flex: 1;
     text-align: right;
