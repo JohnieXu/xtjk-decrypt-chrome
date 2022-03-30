@@ -111,7 +111,7 @@ const Encrypt = () => {
           <Cell title="数据" label="请填写数据" size="small">
             <Field
               type="textarea"
-              autosize
+              autosize={{ minHeight: 80, maxHeight: 300 }}
               required
               clearable
               value={data}
@@ -122,10 +122,10 @@ const Encrypt = () => {
           <Cell>
             <Button type="primary" size="small" block round onClick={handleButtonClick}>开始</Button>
           </Cell>
-          <Cell title="结果">
+          <Cell title="结果" label={ type === 'a' ? '加密结果' : '解密结果' }>
             <Field
               type="textarea"
-              autosize
+              autosize={{ minHeight: 80, maxHeight: 300 }}
               value={resultStr}
             ></Field>
           </Cell>
