@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { encrypt, decrypt, isEncryptedData } from 'decrypt-core';
-import { Toast, hooks, Field, Cell, Popup, Picker, Button } from 'react-vant';
+import { Toast, hooks, Field, Cell, Popup, Picker, Button, Tabs } from 'react-vant';
 import { getAppKey, saveAppKey } from './common/storage';
 import XTab from '../../components/Tab';
 
@@ -85,10 +85,10 @@ const Encrypt = () => {
   return (
     <div className='encrypt'>
       <Cell.Group card className="encrypt-section1">
-        <XTab active={type} options={[
-          { name: 'a', title: '加密' },
-          { name: 'b', title: '解密' }
-        ]} onUpdateActive={handleUpdateActive}></XTab>
+        <Tabs active={type} onChange={handleUpdateActive}>
+          <Tabs.TabPane title='加密' name='a'></Tabs.TabPane>
+          <Tabs.TabPane title='解密' name='b'></Tabs.TabPane>
+        </Tabs>
       </Cell.Group>
       <div className='encrypt-setion2'>
         <Cell.Group card className="input-box">
