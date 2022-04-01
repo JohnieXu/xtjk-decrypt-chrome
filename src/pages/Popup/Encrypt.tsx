@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { encrypt, decrypt, isEncryptedData } from 'decrypt-core';
 import { Toast, hooks, Field, Cell, Popup, Picker, Button, Tabs } from 'react-vant';
-import { getAppKey, saveAppKey } from './common/storage';
-import XTab from '../../components/Tab';
+import {
+  getAppKey,
+  saveAppKey,
+  convertHistory,
+  EncryptHistoryItem,
+  DecryptHistoryItem
+} from './common/storage';
+import { genId, getNow } from './common/utils';
 
 import './Encrypt.scss';
 
@@ -10,15 +16,15 @@ const Encrypt = () => {
   const [result, setResult] = useState("");
   const [appkey, setAppkey] = useState("");
   const [data, setData] = useState("{\na: 'a'\n}");
-  const [type, setType] = useState("a");
+  const [type, setType] = useState<string>("a");
   const [showAppkeyPicker, setShowAppkeyPicker] = useState(false);
 
   // 本地存储的 appkey 列表
   const [appkeyList, setAppkeyList] = useState([]);
 
-  const loadAppkeyList = (setLast) => {
+  const loadAppkeyList = (setLast: boolean) => {
     getAppKey().then((keys) => {
-      setAppkeyList(keys)
+      setAppkeyList(keys as any)
       if (setLast) {
         setAppkey(keys[keys.length - 1] || "")
       }
@@ -36,13 +42,33 @@ const Encrypt = () => {
       saveAppKey(appkey)
       try {
         let _data = null
+        let encryptItem: EncryptHistoryItem
+        let decryptItem: DecryptHistoryItem
         switch(type) {
           case 'a':
             _data = encrypt(data, appkey)
+
+            encryptItem = {
+              id: genId(),
+              date: getNow(),
+              from: data,
+              key: appkey,
+              to: _data
+            }
+            convertHistory.addEncrypt(encryptItem)
             console.log('[debug] encrypt result', _data)
             break
           case 'b':
             _data = decrypt(data, appkey)
+
+            decryptItem = {
+              id: genId(),
+              date: getNow(),
+              from: data,
+              key: appkey,
+              to: _data
+            }
+            convertHistory.addDecrypt(decryptItem)
             console.log('[debug] decrypt result', _data)
             break
           default:
@@ -52,25 +78,25 @@ const Encrypt = () => {
         // if (Math.random() < 0.3) {
         //   throw new Error('加解密失败')
         // }
-        setResult(_data)
+        setResult(_data as any)
         loadAppkeyList(false)
       } catch (e) {
         setResult("")
-        toast(e.message, '加解密报错')
+        toast((e as any).message, '加解密报错')
         console.error(e)
       }
     }
   }
 
-  const handleUpdateActive = (name) => {
-    setType(name)
+  const handleUpdateActive = (name: string | number, title: string) => {
+    setType(name as string)
   }
 
-  const toast = (msg, title = '提示') => {
+  const toast = (msg: string, title = '提示') => {
     msg && window.alert(`${title}\n${msg}`)
   }
 
-  const stringifyResult = (res) => {
+  const stringifyResult = (res: string) => {
     if (typeof res === 'string') {
       return res
     } else {
@@ -92,13 +118,13 @@ const Encrypt = () => {
       </Cell.Group>
       <div className='encrypt-setion2'>
         <Cell.Group card className="input-box">
-          <Cell title="秘钥" label="请选择秘钥" isLink size="small" onClick={() => setShowAppkeyPicker(true)}>
+          <Cell title="秘钥" label="请选择秘钥" isLink size="large" onClick={() => setShowAppkeyPicker(true)}>
             <Field
               value={appkey}
               readonly
             ></Field>
           </Cell>
-          <Cell title="秘钥" label="请填写秘钥" size="small">
+          <Cell title="秘钥" label="请填写秘钥" size="large">
             <Field
             type="textarea"
               value={appkey}
@@ -108,7 +134,7 @@ const Encrypt = () => {
               onChange={setAppkey}
             ></Field>
           </Cell>
-          <Cell title="数据" label="请填写数据" size="small">
+          <Cell title="数据" label="请填写数据" size="large">
             <Field
               type="textarea"
               autosize={{ minHeight: 80, maxHeight: 300 }}
@@ -135,7 +161,7 @@ const Encrypt = () => {
         <Picker
           title="选择秘钥"
           columns={appkeyList}
-          onConfirm={(value) => {
+          onConfirm={(value: any) => {
             setAppkey(value);
             setShowAppkeyPicker(false);
           }}
