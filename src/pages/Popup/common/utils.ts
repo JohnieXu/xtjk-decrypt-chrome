@@ -13,3 +13,8 @@ export const genId = (): string => {
 export const getNow = (): Date => {
   return new Date()
 }
+
+/**
+ * 空函数
+ */
+export const noop = (): void => { }

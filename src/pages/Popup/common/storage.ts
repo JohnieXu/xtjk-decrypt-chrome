@@ -2,7 +2,8 @@ import { DataType } from 'decrypt-core'
 
 const CONST_APPKEY_KEY = 'appkey'
 const CONST_HISTORY_KEY = 'history'
-const CONST_HISTORY_MAX_LENGTH = 10 * 10000 // 最大历史记录数
+const CONST_FAVORITE_KEY = 'favorite'
+const CONST_HISTORY_MAX_LENGTH = 10 * 10000 // 最大记录数
 
 export type KeyItem = string;
 export interface HistoryItem {
@@ -13,6 +14,8 @@ export interface HistoryItem {
   key: string
   to: DataType
 }
+
+export type HistoryIdOrItem = HistoryItem | string
 
 export type EncryptHistoryItem = Pick<HistoryItem, "id" | "date" | "from" | "key" | "to">
 export type DecryptHistoryItem = Pick<HistoryItem, "id" | "date" | "from" | "key" | "to">
@@ -168,6 +171,34 @@ export class ConvertHistory {
       })
     })
   }
+  /**
+   * 移除记录
+   * @param data 待移除记录
+   * @returns 是否成功
+   */
+  remove(data: HistoryIdOrItem): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.getAll().then((list) => {
+        const _list: HistoryItem[] = list.filter((item) => {
+          if (typeof data === 'string') {
+            return data !== item.id
+          } else {
+            return data.id !== item.id
+          }
+        });
+        chrome.storage.sync.set({
+          [this.historyKey]: _list
+        }, () => {
+          resolve(true);
+        });
+      })
+    })
+  }
+  /**
+   * 添加加密记录
+   * @param data 待添加记录
+   * @returns 是否成功
+   */
   addEncrypt(data: EncryptHistoryItem): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const _data = {
@@ -179,6 +210,11 @@ export class ConvertHistory {
       })
     })
   }
+  /**
+   * 添加解密记录
+   * @param data 待添加记录
+   * @returns 是否成功
+   */
   addDecrypt(data: DecryptHistoryItem): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const _data = {
@@ -192,4 +228,18 @@ export class ConvertHistory {
   }
 }
 
-export const convertHistory = new ConvertHistory()
+/**
+ * 加解密历史记录
+ */
+export const convertHistory = new ConvertHistory({
+  historyKey: CONST_HISTORY_KEY,
+  maxLength: CONST_HISTORY_MAX_LENGTH
+})
+
+/**
+ * 收藏记录
+ */
+export const favoriteHistory = new ConvertHistory({
+  historyKey: CONST_FAVORITE_KEY,
+  maxLength: CONST_HISTORY_MAX_LENGTH
+})

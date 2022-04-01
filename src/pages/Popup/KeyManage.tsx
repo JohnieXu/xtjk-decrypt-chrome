@@ -1,7 +1,8 @@
 import { Plus, Replay, DeleteO } from "@react-vant/icons";
 import React, { useState, useEffect, useRef } from "react";
-import { Button, Field, Form, Popup, Toast, hooks, Cell, List, FieldInstance, Loading, Flex, Dialog } from 'react-vant';
+import { Button, Field, Form, Popup, Toast, hooks, Cell, List, FieldInstance, Dialog } from 'react-vant';
 import { saveAppKey, getAppKey, removeAppKey, KeyItem } from "./common/storage";
+import WithLoading from "../../components/WithLoading";
 
 import './KeyManage.scss';
 
@@ -88,11 +89,11 @@ const KeyManage = () => {
       <Cell
         key={key}
         extra={
-        <DeleteO
-          onClick={
-            () => { handleRemoveClick(keyItem); }
-          }
-          style={{ cursor: 'pointer' }}
+          <DeleteO
+            onClick={
+              () => { handleRemoveClick(keyItem); }
+            }
+            style={{ cursor: 'pointer' }}
           />
         }>{keyItem}</Cell>
     )
@@ -118,21 +119,13 @@ const KeyManage = () => {
           >刷新</Button>
         </Button.Group>
       </div>
-      {
-        listLoading ? (
-          <Flex justify="center" align="center" style={{ marginTop: '200px' }}>
-            <Flex.Item flex="0 0 30px">
-              <Loading type="spinner" />
-            </Flex.Item>
-          </Flex>
-        ) : (
-          <List className="section-list" finished={true} loading={listLoading}>
-          {
-            keyList.map((key, i) => renderKeyItem(key, i))
-          }
-          </List>
-        )
-      }
+      <WithLoading loading={listLoading}>
+        <List className="section-list" finished={true} loading={listLoading}>
+        {
+          keyList.map((key, i) => renderKeyItem(key, i))
+        }
+        </List>
+      </WithLoading>
       <Popup
         visible={popupVisible}
         style={{
