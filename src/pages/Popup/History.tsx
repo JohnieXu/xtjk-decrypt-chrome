@@ -4,6 +4,7 @@ import { Button, List, Cell, Dialog, Toast, hooks } from 'react-vant';
 import { HistoryItem, convertHistory, favoriteHistory } from './common/storage';
 import { noop } from './common/utils'
 import WithLoading from '../../components/WithLoading';
+import JsonView from '../../../react-json-preview/src/index';
 
 import './History.scss';
 
@@ -109,6 +110,7 @@ const History = () => {
             />
           </>
         }>
+          <JsonView value={keyItem} indent={2} containerHeight={80} />
           <pre className='code'>{JSON.stringify(keyItem, null, 2)}</pre>
         </Cell>
     )

@@ -74,6 +74,15 @@ var options = {
         ],
       },
       {
+        test: /\.less$/,
+        exclude: '/node_modules/',
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+          { loader: 'less-loader' },
+        ],
+      },
+      {
         test: new RegExp('.(' + fileExtensions.join('|') + ')$'),
         loader: 'file-loader',
         options: {

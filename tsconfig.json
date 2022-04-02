@@ -15,6 +15,6 @@
     "noEmit": false,
     "jsx": "react"
   },
-  "include": ["src"],
+  "include": ["src", "react-json-preview/src"],
   "exclude": ["build", "node_modules"]
 }
