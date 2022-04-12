@@ -1,3 +1,7 @@
+:root {
+  --rv-primary-color: blueviolet;
+}
+
 body {
   /* width: 300px; */
   /* height: 260px; */
@@ -11,7 +15,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
   position: relative;
 }
 

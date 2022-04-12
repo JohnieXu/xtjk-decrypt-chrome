@@ -1,3 +1,5 @@
+$primaryColor: var(--rv-primary-color);
+
 .x-side-menu {
   display: flex;
   flex: 0 0 100%;
@@ -14,7 +16,11 @@
     transition: all 0.2s ease;
     cursor: pointer;
     &--active {
-      background: blueviolet;
+      background: $primaryColor;
+      color: #fff;
+    }
+    &:hover {
+      background: $primaryColor;
       color: #fff;
     }
   }
