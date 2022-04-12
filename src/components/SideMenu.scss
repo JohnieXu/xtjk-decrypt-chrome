@@ -15,6 +15,8 @@ $primaryColor: var(--rv-primary-color);
     color: #333;
     transition: all 0.2s ease;
     cursor: pointer;
+    border-top-right-radius: var(--rv-border-radius-max);
+    border-bottom-right-radius: var(--rv-border-radius-max);
     &--active {
       background: $primaryColor;
       color: #fff;

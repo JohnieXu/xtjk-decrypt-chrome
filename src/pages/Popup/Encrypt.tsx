@@ -145,7 +145,7 @@ const Encrypt = () => {
               onChange={setData}
             ></Field>
           </Cell>
-          <Cell>
+          <Cell className="cell-button">
             <Button type="primary" size="small" block round onClick={handleButtonClick}>开始</Button>
           </Cell>
           <Cell title="结果" label={ type === 'a' ? '加密结果' : '解密结果' }>

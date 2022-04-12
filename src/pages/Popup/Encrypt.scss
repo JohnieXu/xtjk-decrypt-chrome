@@ -2,6 +2,8 @@ $background-color: rgb(247, 248, 250);
 
 .encrypt {
   background: $background-color;
+  --rv-cell-large-title-font-size: var(--rv-font-size-md);
+  --rv-cell-large-label-font-size: var(--rv-font-size-sm);
 }
 
 .encrypt-section1 {
@@ -19,6 +21,17 @@ $background-color: rgb(247, 248, 250);
     }
     .rv-cell__value {
       word-break: break-all;
+    }
+  }
+  .cell-button {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    & > .rv-cell__value > .rv-button {
+      max-width: 180px;
+      margin: 0 auto;
+      @media screen and (max-width: 400px){
+        max-width: 80%;
+      }
     }
   }
 }
