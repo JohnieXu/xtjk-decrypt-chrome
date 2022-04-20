@@ -23,6 +23,29 @@ $background-color: rgb(247, 248, 250);
       word-break: break-all;
     }
   }
+  .input-box--middle {
+    @media screen and (min-width: 1000px) {
+      display: none;
+    }
+  }
+  .input-box--wide {
+    @media screen and (max-width: 999px) {
+      display: none;
+    }
+    display: flex;
+    flex-direction: row;
+    .left {
+      width: 40%;
+      flex: 0 0 40%;
+    }
+    .right {
+      width: 50%;
+      flex: 1;
+      .rv-cell-group--inset {
+        margin-left: 0;
+      }
+    }
+  }
   .cell-button {
     padding-top: 30px;
     padding-bottom: 30px;

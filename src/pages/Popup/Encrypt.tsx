@@ -17,7 +17,7 @@ const debug = genDebug('encrypt-page')
 const Encrypt = () => {
   const [result, setResult] = useState("");
   const [appkey, setAppkey] = useState("");
-  const [data, setData] = useState("{\na: 'a'\n}");
+  const [data, setData] = useState("");
   const [type, setType] = useState<string>("a");
   const [showAppkeyPicker, setShowAppkeyPicker] = useState(false);
 
@@ -35,58 +35,64 @@ const Encrypt = () => {
     })
   }
 
-  const handleButtonClick = () => {
+  const handleStartClick = () => {
+    if (!appkey) {
+      Toast('请填写秘钥')
+      return
+    }
+    if (!data) {
+      Toast('请填写数据')
+      return
+    }
     if (type === 'b' && !isEncryptedData(data)) {
       Toast('要解密的数据不符合加密数据格式，请检查')
       return
     }
-    if (appkey && data) {
-      saveAppKey(appkey)
-      try {
-        let _data = null
-        let encryptItem: EncryptHistoryItem
-        let decryptItem: DecryptHistoryItem
-        switch(type) {
-          case 'a':
-            _data = encrypt(data, appkey)
+    saveAppKey(appkey)
+    try {
+      let _data = null
+      let encryptItem: EncryptHistoryItem
+      let decryptItem: DecryptHistoryItem
+      switch(type) {
+        case 'a':
+          _data = encrypt(data, appkey)
 
-            encryptItem = {
-              id: genId(),
-              date: getNow(),
-              from: data,
-              key: appkey,
-              to: _data
-            }
-            convertHistory.addEncrypt(encryptItem)
-            debug(_data, 'encrypt result')
-            break
-          case 'b':
-            _data = decrypt(data, appkey)
+          encryptItem = {
+            id: genId(),
+            date: getNow(),
+            from: data,
+            key: appkey,
+            to: _data
+          }
+          convertHistory.addEncrypt(encryptItem)
+          debug(_data, 'encrypt result')
+          break
+        case 'b':
+          _data = decrypt(data, appkey)
 
-            decryptItem = {
-              id: genId(),
-              date: getNow(),
-              from: data,
-              key: appkey,
-              to: _data
-            }
-            convertHistory.addDecrypt(decryptItem)
-            debug(_data, 'decrypt result')
-            break
-          default:
-            break
-        }
-        // 测试用
-        // if (Math.random() < 0.3) {
-        //   throw new Error('加解密失败')
-        // }
-        setResult(_data as any)
-        loadAppkeyList(false)
-      } catch (e) {
-        setResult("")
-        toast((e as any).message, '加解密报错')
-        console.error(e)
+          decryptItem = {
+            id: genId(),
+            date: getNow(),
+            from: data,
+            key: appkey,
+            to: _data
+          }
+          convertHistory.addDecrypt(decryptItem)
+          debug(_data, 'decrypt result')
+          break
+        default:
+          break
       }
+      // 测试用
+      // if (Math.random() < 0.3) {
+      //   throw new Error('加解密失败')
+      // }
+      setResult(_data as any)
+      loadAppkeyList(false)
+    } catch (e) {
+      setResult("")
+      toast((e as any).message, '加解密报错')
+      console.error(e)
     }
   }
 
@@ -119,50 +125,105 @@ const Encrypt = () => {
         </Tabs>
       </Cell.Group>
       <div className='encrypt-setion2'>
-        <Cell.Group card className="input-box">
-          <Cell title="秘钥" label="请选择秘钥" isLink size="large" onClick={() => setShowAppkeyPicker(true)}>
-            <Field
-              value={appkey}
-              readonly
-            ></Field>
-          </Cell>
-          <Cell title="秘钥" label="请填写秘钥" size="large">
-            <Field
-            type="textarea"
-              value={appkey}
-              clearable
-              required
-              placeholder="请填写秘钥"
-              onChange={setAppkey}
-            ></Field>
-          </Cell>
-          <Cell title="数据" label="请填写数据" size="large">
-            <Field
+        {/* 小屏展示 */}
+        <div className="input-box input-box--middle">
+          <Cell.Group card>
+            {/* 输入框 */}
+            <Cell title="秘钥" label="请选择秘钥" isLink size="large" onClick={() => setShowAppkeyPicker(true)}>
+              <Field
+                value={appkey}
+                readonly
+              ></Field>
+            </Cell>
+            <Cell title="秘钥" label="请填写秘钥" size="large">
+              <Field
               type="textarea"
-              autosize={{ minHeight: 80, maxHeight: 300 }}
-              required
-              clearable
-              value={data}
-              placeholder="请填写数据"
-              onChange={setData}
-            ></Field>
-          </Cell>
-          <Cell className="cell-button">
-            <Button type="primary" size="small" block round onClick={handleButtonClick}>开始</Button>
-          </Cell>
-          <Cell title="结果" label={ type === 'a' ? '加密结果' : '解密结果' }>
-            <Field
+                value={appkey}
+                clearable
+                required
+                placeholder="请填写秘钥"
+                onChange={setAppkey}
+              ></Field>
+            </Cell>
+            <Cell title="数据" label="请填写数据" size="large">
+              <Field
+                type="textarea"
+                autosize={{ minHeight: 80, maxHeight: 300 }}
+                required
+                clearable
+                value={data}
+                placeholder="请填写数据"
+                onChange={setData}
+              ></Field>
+            </Cell>
+            {/* 开始按钮 */}
+            <Cell className="cell-button">
+              <Button type="primary" size="small" block round onClick={handleStartClick}>开始</Button>
+            </Cell>
+            {/* 结果 */}
+            <Cell title="结果" label={ type === 'a' ? '加密结果' : '解密结果' }>
+              <Field
+                type="textarea"
+                autosize={{ minHeight: 80, maxHeight: 300 }}
+                value={resultStr}
+              ></Field>
+            </Cell>
+          </Cell.Group>
+        </div>
+        {/* 宽屏展示 */}
+        <div className="input-box input-box--wide">
+          <Cell.Group card className="left">
+            <Cell title="秘钥" label="请选择秘钥" isLink size="large" onClick={() => setShowAppkeyPicker(true)}>
+              <Field
+                value={appkey}
+                readonly
+              ></Field>
+            </Cell>
+            <Cell title="秘钥" label="请填写秘钥" size="large">
+              <Field
               type="textarea"
-              autosize={{ minHeight: 80, maxHeight: 300 }}
-              value={resultStr}
-            ></Field>
-          </Cell>
-        </Cell.Group>
+                value={appkey}
+                clearable
+                required
+                placeholder="请填写秘钥"
+                onChange={setAppkey}
+              ></Field>
+            </Cell>
+            <Cell title="数据" label="请填写数据" size="large">
+              <Field
+                type="textarea"
+                autosize={{ minHeight: 80, maxHeight: 300 }}
+                required
+                clearable
+                value={data}
+                placeholder="请填写数据"
+                onChange={setData}
+              ></Field>
+            </Cell>
+            {/* 开始按钮 */}
+            <Cell className="cell-button">
+              <Button type="primary" size="small" block round onClick={handleStartClick}>开始</Button>
+            </Cell>
+          </Cell.Group>
+          <Cell.Group card className="right">
+            {/* 结果 */}
+            <Cell title="结果" label={ type === 'a' ? '加密结果' : '解密结果' }>
+              <Field
+                type="textarea"
+                autosize={{ minHeight: 350, maxHeight: 560 }}
+                value={resultStr}
+              ></Field>
+            </Cell>
+          </Cell.Group>
+        </div>
       </div>
       <Popup round visible={showAppkeyPicker} position="top" onClose={() => setShowAppkeyPicker(false)}>
         <Picker
           title="选择秘钥"
           columns={appkeyList}
+          onChange={(value: any) => {
+            setAppkey(value);
+          }}
           onConfirm={(value: any) => {
             setAppkey(value);
             setShowAppkeyPicker(false);
