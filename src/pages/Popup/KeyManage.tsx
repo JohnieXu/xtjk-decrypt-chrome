@@ -5,6 +5,9 @@ import { saveAppKey, getAppKey, removeAppKey, KeyItem } from "./common/storage";
 import WithLoading from "../../components/WithLoading";
 
 import './KeyManage.scss';
+import { genDebug } from "./common/utils";
+
+const debug = genDebug('keyManage-page')
 
 type FormValue = {
   name: string
@@ -38,7 +41,7 @@ const KeyManage = () => {
   }
 
   const handleRemoveClick = (keyItem: KeyItem) => {
-    console.log(keyItem);
+    debug(keyItem);
     Dialog.confirm({
       title: '提示',
       message: `将要删除秘钥：${keyItem}`,

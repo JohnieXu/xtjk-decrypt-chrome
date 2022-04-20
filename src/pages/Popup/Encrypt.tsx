@@ -8,9 +8,11 @@ import {
   EncryptHistoryItem,
   DecryptHistoryItem
 } from './common/storage';
-import { genId, getNow } from './common/utils';
+import { genDebug, genId, getNow } from './common/utils';
 
 import './Encrypt.scss';
+
+const debug = genDebug('encrypt-page')
 
 const Encrypt = () => {
   const [result, setResult] = useState("");
@@ -56,7 +58,7 @@ const Encrypt = () => {
               to: _data
             }
             convertHistory.addEncrypt(encryptItem)
-            console.log('[debug] encrypt result', _data)
+            debug(_data, 'encrypt result')
             break
           case 'b':
             _data = decrypt(data, appkey)
@@ -69,7 +71,7 @@ const Encrypt = () => {
               to: _data
             }
             convertHistory.addDecrypt(decryptItem)
-            console.log('[debug] decrypt result', _data)
+            debug(_data, 'decrypt result')
             break
           default:
             break

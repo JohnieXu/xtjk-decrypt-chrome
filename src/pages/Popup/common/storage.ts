@@ -1,9 +1,12 @@
 import { DataType } from 'decrypt-core'
+import { genDebug } from './utils'
 
 const CONST_APPKEY_KEY = 'appkey'
 const CONST_HISTORY_KEY = 'history'
 const CONST_FAVORITE_KEY = 'favorite'
 const CONST_HISTORY_MAX_LENGTH = 10 * 10000 // 最大记录数
+
+const debug = genDebug('storage')
 
 export type KeyItem = string;
 export interface HistoryItem {
@@ -37,12 +40,12 @@ export function saveAppKey(appkey: KeyItem): Promise<boolean> {
       chrome.storage.sync.get({
         [APPKEY_KEY]: []
       }, (result) => {
-        console.log(result)
+        debug(result, 'saveAppKeyResult')
         let keys = result[APPKEY_KEY]
         if (!keys.includes(appkey)) {
           keys = [...keys, appkey]
         }
-        console.log('[debug] keys', keys)
+        debug(keys, 'keys')
         chrome.storage.sync.set({
           [APPKEY_KEY]: keys
         }, () => {
@@ -67,14 +70,14 @@ export function removeAppKey(appkey: KeyItem): Promise<boolean> {
       chrome.storage.sync.get({
         [APPKEY_KEY]: []
       }, (result) => {
-        console.log(result)
+        debug(result, 'removeAppKeyResult')
         let keys = result[APPKEY_KEY]
         if (!keys.includes(appkey)) {
           resolve(true)
         } else {
           keys = keys.filter((i: string) => i !== appkey)
         }
-        console.log('[debug] keys', keys)
+        debug(keys, 'keys')
         chrome.storage.sync.set({
           [APPKEY_KEY]: keys
         }, () => {
@@ -98,7 +101,7 @@ export function getAppKey(): Promise<KeyItem[]> {
       [APPKEY_KEY]: []
     }, (result) => {
       let keys = result[APPKEY_KEY]
-      console.log('[debug] getAppKey keys', keys)
+      debug(keys, 'getAppKey keys')
       resolve(keys as KeyItem[])
     })
   })
@@ -125,7 +128,7 @@ export class ConvertHistory {
       }, (result) => {
         let list = result[this.historyKey] as HistoryItem[]
         list = list.sort((a, b) => Number(b.id) - Number(a.id))
-        console.log('[debug] covertHistory.geAll list', list)
+        debug(list, 'covertHistory.getAll list')
         resolve(list)
       })
     })
