@@ -1,0 +1,3 @@
+[submodule "react-json-preview"]
+	path = react-json-preview
+	url = https://github.com/dream-unicorn/react-json-preview.git

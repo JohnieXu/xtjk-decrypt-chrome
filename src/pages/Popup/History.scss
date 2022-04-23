@@ -7,4 +7,13 @@
   .section-operation {
     padding-bottom: 12px;
   }
+  // 记录项顶部操作
+  .top {
+    .pointer {
+      cursor: pointer;
+    }
+    .rv-tag:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
 }
