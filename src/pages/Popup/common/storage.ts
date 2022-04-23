@@ -11,7 +11,7 @@ const debug = genDebug('storage')
 export type KeyItem = string;
 export interface HistoryItem {
   id: string
-  date: Date
+  date: string
   type: EncryptType
   from: DataType
   key: string

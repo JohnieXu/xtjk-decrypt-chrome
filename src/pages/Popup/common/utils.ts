@@ -10,8 +10,8 @@ export const genId = (): string => {
  * 获取当前日期
  * @returns 当前日期
  */
-export const getNow = (): Date => {
-  return new Date()
+export const getNow = (): string => {
+  return new Date().toLocaleString()
 }
 
 /**
