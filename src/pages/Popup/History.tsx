@@ -41,6 +41,22 @@ const History = () => {
     loadHistoryList()
   }
 
+  const handleDeleteAllClick = () => {
+    Dialog.confirm({
+      title: '提示',
+      message: `将要清空所有历史记录`,
+      showCancelButton: true
+    }).then(() => {
+      convertHistory.clearAll().then(() => {
+        Toast('清空成功！');
+        loadHistoryList();
+      }).catch((e: any) => {
+        console.log(e);
+        Toast('清空失败！');
+      });
+    }).catch(noop);
+  }
+
   hooks.useMount(() => {
     loadHistoryList();
     loadFavoriteList();
@@ -183,6 +199,12 @@ const History = () => {
             onClick={handleRefreshClick}
             icon={<Replay />}
           >刷新</Button>
+          <Button
+            type="primary"
+            size="small"
+            onClick={handleDeleteAllClick}
+            icon={<DeleteO />}
+          >清空</Button>
         </Button.Group>
       </div>
       <WithLoading loading={historyLoading}>

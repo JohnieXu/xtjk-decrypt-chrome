@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Replay, DeleteO, StarO, Star } from '@react-vant/icons'
 import { Button, List, Cell, Dialog, Toast, hooks } from 'react-vant';
-import { HistoryItem, favoriteHistory } from './common/storage';
+import { HistoryItem, favoriteHistory, convertHistory } from './common/storage';
 import { noop } from './common/utils'
 import WithLoading from '../../components/WithLoading';
 
@@ -24,6 +24,22 @@ const Favorite = () => {
   const handleRefreshClick = () => {
     loadFavoriteList();
   };
+
+  const handleDeleteAllClick = () => {
+    Dialog.confirm({
+      title: '提示',
+      message: `将要清空所有收藏`,
+      showCancelButton: true
+    }).then(() => {
+      favoriteHistory.clearAll().then(() => {
+        Toast('清空成功！');
+        loadFavoriteList();
+      }).catch((e: any) => {
+        console.log(e);
+        Toast('清空失败！');
+      });
+    }).catch(noop);
+  }
 
   hooks.useMount(() => {
     loadFavoriteList();
@@ -74,6 +90,12 @@ const Favorite = () => {
             onClick={handleRefreshClick}
             icon={<Replay />}
           >刷新</Button>
+          <Button
+            type="primary"
+            size="small"
+            onClick={handleDeleteAllClick}
+            icon={<DeleteO />}
+          >清空</Button>
         </Button.Group>
       </div>
       <WithLoading loading={favoriteLoading}>
