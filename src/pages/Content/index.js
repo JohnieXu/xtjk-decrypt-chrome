@@ -30,8 +30,8 @@ function addButton() {
     el.style.boxShadow = '0px 0px 10px rgb(0 0 0 / 10%)';
     el.style.borderRadius = '6px';
     el.style.cursor = 'pointer';
-    el.onclick = () => {
-      if (opened) {
+    const open = (autoClose = true) => {
+      if (autoClose && opened) {
         opened = false;
         removeMessageListen({ handler: messageHandler });
         closePopup();
@@ -43,6 +43,11 @@ function addButton() {
         });
         iframe = openPopup();
       }
+    };
+    el.onclick = open;
+    el.ondblclick = () => {
+      open(false);
+      setIframeSize(iframe, 'full'); // 全屏
     };
     document.body.appendChild(el);
     return el;
@@ -82,5 +87,7 @@ function removeMessageListen({ handler } = {}) {
 addButton()();
 
 chrome.runtime.onMessage.addListener((message, sender) => {
-  console.log(message, sender, message.data);
+  if (message.data && message.data.type === MESSAGE_LISTEN_TYPE) {
+    console.log(message, sender, message.data);
+  }
 });
