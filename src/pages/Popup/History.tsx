@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Replay, DeleteO, StarO, Star } from '@react-vant/icons'
-import { Button, List, Cell, Dialog, Toast, Tag, hooks } from 'react-vant';
+import { Button, List, Cell, Dialog, Toast, Tag, hooks, Popup } from 'react-vant';
 import { TagType } from 'react-vant/es/tag/PropsType';
 import { HistoryItem, convertHistory, favoriteHistory, EncryptType } from './common/storage';
 import { noop } from './common/utils'
@@ -16,6 +16,11 @@ const History = () => {
 
   const [favoriteList, setFavoriteList] = useState<HistoryItem[]>([])
   const [favoriteLoading, setFavoriteLoading] = useState<boolean>(false)
+
+  const [isJsonPopupShow, setIsJsonPopupShow] = useState<boolean>(false)
+  const [jsonPopupContent, setJsonPopContent] = useState<object | object[]>({})
+
+  const containerRef = useRef(null)
 
   const loadHistoryList = () => {
     setHistoryLoding(true)
@@ -126,7 +131,8 @@ const History = () => {
      * 展示 JSON 预览结果
      */
     function handleButtonClick(result: string, type: EncryptType) {
-      console.log(result, encType)
+      // console.log(result, type)
+      showJsonPopup({ result, type })
     }
     let encType: EncryptType
     let result: string
@@ -143,6 +149,16 @@ const History = () => {
     return (
       <Tag className='pointer' onClick={() => handleButtonClick(result, encType)} type='warning' plain>JSON</Tag>
     )
+  }
+
+  /**
+   * 展示加、解密数据 JSON 预览弹窗
+   * @param param0 
+   */
+  function showJsonPopup({ result, type }: { result: string, type: EncryptType }) {
+    const _result = JSON.parse(result)
+    setIsJsonPopupShow(true)
+    setJsonPopContent(_result)
   }
 
   const renderKeyItem = (keyItem: HistoryItem, key: number | string) => {
@@ -190,7 +206,7 @@ const History = () => {
   }
 
   return (
-    <div className='history'>
+    <div className='history' ref={containerRef}>
       <div className="section-operation">
         <Button.Group onClick={noop} block round>
           <Button
@@ -214,7 +230,18 @@ const History = () => {
           }
         </List>
       </WithLoading>
-      {/* <pre className='code'>{JSON.stringify(historyList, null, 2)}</pre> */}
+      <Popup
+        className="json-popup"
+        visible={isJsonPopupShow}
+        onClose={() => { setIsJsonPopupShow(false); setJsonPopContent({}); }}
+        teleport={containerRef.current}
+        closeOnPopstate
+        closeable
+      >
+        <div style={{ width: "80vw", height: "400px" }}>
+          <JsonView value={jsonPopupContent} indent={2} containerHeight={400}></JsonView>
+        </div>
+      </Popup>
     </div>
   )
 }

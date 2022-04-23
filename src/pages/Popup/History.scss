@@ -16,4 +16,14 @@
       margin-right: 5px;
     }
   }
+  .json-popup {
+    // 弹窗样式
+    border-radius: 10px;
+    padding: 10px;
+    overflow-y: hidden;
+    // JSON 预览样式
+    .virtual-mode {
+      border: none;
+    }
+  }
 }
