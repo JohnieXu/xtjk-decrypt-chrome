@@ -4,7 +4,7 @@ import {
   setIframeSize,
 } from './modules/popup';
 
-const MESSAGE_LISTEN_TYPE = '36cfdd19__xtjk_decrypt_message_size';
+const MESSAGE_LISTEN_TYPE = '36cfdd19__xtjk_decrypt_message';
 
 /**
  * 向页面添加打开插件页面的按钮

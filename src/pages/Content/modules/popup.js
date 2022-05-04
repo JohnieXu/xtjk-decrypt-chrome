@@ -1,11 +1,11 @@
-const IFRAME_ID = '__xtjk_decrypt_iframe';
+const IFRAME_ID = '36cfdd19__xtjk_decrypt_iframe';
 const SIZE_TYPE = {
   mini: 'mini',
   wide: 'wide',
   full: 'full',
 };
 const IFRAME_STYLE = {
-  mini: {
+  [SIZE_TYPE.mini]: {
     position: 'fixed',
     right: '10px',
     top: '140px',
@@ -13,7 +13,7 @@ const IFRAME_STYLE = {
     height: '600px',
     borderRadius: '6px',
   },
-  wide: {
+  [SIZE_TYPE.wide]: {
     position: 'fixed',
     right: '10px',
     top: '140px',
@@ -21,7 +21,7 @@ const IFRAME_STYLE = {
     height: '600px',
     borderRadius: '6px',
   },
-  full: {
+  [SIZE_TYPE.full]: {
     position: 'fixed',
     right: '0px',
     top: '0px',
