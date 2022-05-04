@@ -28,6 +28,15 @@ export enum EncryptType {
   Decrypt = '2'
 }
 
+export enum HistoryStorage {
+  Sync = 'sync',
+  Local = 'local'
+}
+
+interface BaseObject {
+  [key: string]: (...args: any[]) => any
+}
+
 /**
  * 存储秘钥
  * @param appkey 秘钥
@@ -107,15 +116,37 @@ export function getAppKey(): Promise<KeyItem[]> {
   })
 }
 
-export class ConvertHistory {
+/**
+ * 存储加解密记录
+ * @param {object} data
+ * @param {number} data.maxLength 最大记录数
+ * @param {string} data.historyKey 存储的 key
+ * @param {HistoryStorage} data.stroageType 存储类型 sync/local default:sync
+ */
+export class BaseHistory {
   maxLength: number;
   historyKey: string;
-  constructor({ maxLength = CONST_HISTORY_MAX_LENGTH, historyKey = CONST_HISTORY_KEY } = {}) {
+  storageType: HistoryStorage;
+  private storage: chrome.storage.StorageArea | chrome.storage.LocalStorageArea;
+  constructor({
+    maxLength = CONST_HISTORY_MAX_LENGTH,
+    historyKey = CONST_HISTORY_KEY,
+    storageType = HistoryStorage.Sync
+  } = {}) {
     if (maxLength <= 0) {
       maxLength = CONST_HISTORY_MAX_LENGTH
     }
     this.maxLength = maxLength
     this.historyKey = historyKey
+    this.storageType = storageType
+    switch (storageType) {
+      case HistoryStorage.Sync:
+        this.storage = chrome.storage.sync;
+        break;
+      case HistoryStorage.Local:
+        this.storage = chrome.storage.local;
+        break;
+    }
   }
   /**
    * 查询所有历史记录（id 倒序）
@@ -123,7 +154,7 @@ export class ConvertHistory {
    */
   getAll(): Promise<HistoryItem[]> {
     return new Promise((resolve, reject) => {
-      chrome.storage.sync.get({
+      this.storage.get({
         [this.historyKey]: []
       }, (result) => {
         let list = result[this.historyKey] as HistoryItem[]
@@ -139,7 +170,7 @@ export class ConvertHistory {
    */
   clearAll(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      chrome.storage.sync.set({
+      this.storage.set({
         [this.historyKey]: []
       }, () => {
         resolve(true)
@@ -166,7 +197,7 @@ export class ConvertHistory {
     return new Promise((resolve, reject) => {
       this.getAll().then((list) => {
         list.push(data)
-        chrome.storage.sync.set({
+        this.storage.set({
           [this.historyKey]: list
         }, () => {
           resolve(true)
@@ -189,7 +220,7 @@ export class ConvertHistory {
             return data.id !== item.id
           }
         });
-        chrome.storage.sync.set({
+        this.storage.set({
           [this.historyKey]: _list
         }, () => {
           resolve(true);
@@ -234,15 +265,17 @@ export class ConvertHistory {
 /**
  * 加解密历史记录
  */
-export const convertHistory = new ConvertHistory({
+export const convertHistory = new BaseHistory({
   historyKey: CONST_HISTORY_KEY,
-  maxLength: CONST_HISTORY_MAX_LENGTH
+  maxLength: CONST_HISTORY_MAX_LENGTH,
+  storageType: HistoryStorage.Local,
 })
 
 /**
  * 收藏记录
  */
-export const favoriteHistory = new ConvertHistory({
+export const favoriteHistory = new BaseHistory({
   historyKey: CONST_FAVORITE_KEY,
-  maxLength: CONST_HISTORY_MAX_LENGTH
+  maxLength: CONST_HISTORY_MAX_LENGTH,
+  storageType: HistoryStorage.Local,
 })
