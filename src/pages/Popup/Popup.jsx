@@ -4,13 +4,13 @@ import { Button } from 'react-vant';
 import XHeader from '../../components/Header';
 import XSideMenu from '../../components/SideMenu';
 import Encrypt from './Encrypt';
-import Histroy from './History';
+import History from './History';
 import KeyManage from './KeyManage';
 import Favorite from './Favorite';
 
 import './Popup.scss';
 
-const CONST_APPKEY_KEY = 'appkey';
+// const CONST_APPKEY_KEY = 'appkey';
 const MESSAGE_LISTEN_TYPE = '36cfdd19__xtjk_decrypt_message_size';
 
 const MENUS = [
@@ -81,7 +81,7 @@ const Popup = () => {
       <Routes>
         <Route path="/" element={<App />}>
           <Route path="encrypt" element={<Encrypt />}></Route>
-          <Route path="history" element={<Histroy />}></Route>
+          <Route path="history" element={<History />}></Route>
           <Route path="keyManage" element={<KeyManage />}></Route>
           <Route path="favorite" element={<Favorite />}></Route>
           <Route path="*" element={<NotFound />}></Route>
