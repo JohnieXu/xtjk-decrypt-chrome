@@ -11,7 +11,7 @@ import Favorite from './Favorite';
 import './Popup.scss';
 
 // const CONST_APPKEY_KEY = 'appkey';
-const MESSAGE_LISTEN_TYPE = '36cfdd19__xtjk_decrypt_message_size';
+const MESSAGE_LISTEN_TYPE = '36cfdd19__xtjk_decrypt_message';
 
 const MENUS = [
   {
