@@ -39,7 +39,7 @@ function addButton({ withClose = true } = {}) {
       position: 'fixed',
       right: '10px',
       top: '100px',
-      padding: '12px',
+      padding: 0,
       background: '#fff',
       color: '#333',
       zIndex: 9999,
@@ -58,7 +58,8 @@ function addButton({ withClose = true } = {}) {
       cursor: 'pointer',
       fontSize: '12px',
       lineHeight: 1,
-      padding: 0,
+      padding: '12px',
+      userSelect: 'none',
     };
     buttonEl.innerHTML = 'xtjk-decrypt';
     style(buttonEl, buttonStyle);
