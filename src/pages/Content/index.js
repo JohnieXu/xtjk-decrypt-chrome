@@ -60,6 +60,8 @@ function addButton({ withClose = true } = {}) {
       lineHeight: 1,
       padding: '12px',
       userSelect: 'none',
+      color: 'inherit',
+      margin: 0,
     };
     buttonEl.innerHTML = 'xtjk-decrypt';
     style(buttonEl, buttonStyle);
