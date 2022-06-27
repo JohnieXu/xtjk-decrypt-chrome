@@ -137,7 +137,7 @@ const Encrypt = () => {
             </Cell>
             <Cell title="秘钥" label="请填写秘钥" size="large">
               <Field
-              type="textarea"
+                type="textarea"
                 value={appkey}
                 clearable
                 required
