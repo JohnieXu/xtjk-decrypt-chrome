@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { encrypt, decrypt, isEncryptedData, createSign, verifySign } from 'decrypt-core';
+import { createSign, verifySign, isEncryptedData, BaseObject } from 'decrypt-core';
 import { Toast, hooks, Field, Cell, Popup, Picker, Button, Tabs } from 'react-vant';
 import {
   getAppKey,
@@ -10,11 +10,11 @@ import {
 } from './common/storage';
 import { genDebug, genId, getNow } from './common/utils';
 
-import './Encrypt.scss';
+import './Sign.scss';
 
-const debug = genDebug('encrypt-page')
+const debug = genDebug('sign-page')
 
-const Encrypt = () => {
+const Sign = () => {
   const [result, setResult] = useState("");
   const [appkey, setAppkey] = useState("");
   const [data, setData] = useState("");
@@ -36,10 +36,6 @@ const Encrypt = () => {
   }
 
   const handleStartClick = () => {
-    const sign = createSign({ foo: 'bar' }, '123')
-    console.log(sign)
-    console.log(verifySign({ sign }, '123'))
-    console.log(verifySign({ foo: 'bar', sign }, '123'))
     if (!appkey) {
       Toast('请填写秘钥')
       return
@@ -48,41 +44,46 @@ const Encrypt = () => {
       Toast('请填写数据')
       return
     }
-    if (type === 'b' && !isEncryptedData(data)) {
-      Toast('要解密的数据不符合加密数据格式，请检查')
-      return
+    try {
+      let d = JSON.parse(data)
+      if (Object.prototype.toString.call(d) !== '[object Object]') {
+        return Toast('数据不是 JSON 对象格式，例如: "{\"foo\": \"bar\"}"')
+      }
+    } catch (e) {
+      return Toast('数据不是 JSON 格式')
     }
+    let dataObject = JSON.parse(data) as BaseObject
     saveAppKey(appkey)
     try {
-      let _data = null
+      let sign: string | boolean = false
       let encryptItem: EncryptHistoryItem
       let decryptItem: DecryptHistoryItem
       switch(type) {
         case 'a':
-          _data = encrypt(data, appkey)
+          sign = createSign(dataObject, appkey)
 
-          encryptItem = {
-            id: genId(),
-            date: getNow(),
-            from: data,
-            key: appkey,
-            to: _data
-          }
-          convertHistory.addEncrypt(encryptItem)
-          debug(_data, 'encrypt result')
+          // encryptItem = {
+          //   id: genId(),
+          //   date: getNow(),
+          //   from: data,
+          //   key: appkey,
+          //   to: sign
+          // }
+          // convertHistory.addEncrypt(encryptItem)
+          debug(sign, 'sign result')
           break
         case 'b':
-          _data = decrypt(data, appkey)
+          sign = verifySign(dataObject, appkey)
 
-          decryptItem = {
-            id: genId(),
-            date: getNow(),
-            from: data,
-            key: appkey,
-            to: _data
-          }
-          convertHistory.addDecrypt(decryptItem)
-          debug(_data, 'decrypt result')
+          // decryptItem = {
+          //   id: genId(),
+          //   date: getNow(),
+          //   from: data,
+          //   key: appkey,
+          //   to: _data
+          // }
+          // convertHistory.addDecrypt(decryptItem)
+          debug(sign, 'verifySign result')
           break
         default:
           break
@@ -91,11 +92,11 @@ const Encrypt = () => {
       // if (Math.random() < 0.3) {
       //   throw new Error('加解密失败')
       // }
-      setResult(_data as any)
+      setResult(typeof sign === 'boolean' ? sign + '' : sign)
       loadAppkeyList(false)
     } catch (e) {
       setResult("")
-      toast((e as any).message, '加解密报错')
+      toast((e as any).message, '加签验签报错')
       console.error(e)
     }
   }
@@ -121,14 +122,14 @@ const Encrypt = () => {
   hooks.useMount(() => { loadAppkeyList(true); });
 
   return (
-    <div className='encrypt'>
-      <Cell.Group card className="encrypt-section1">
+    <div className='sign'>
+      <Cell.Group card className="sign-section1">
         <Tabs active={type} onChange={handleUpdateActive}>
-          <Tabs.TabPane title='加密' name='a'></Tabs.TabPane>
-          <Tabs.TabPane title='解密' name='b'></Tabs.TabPane>
+          <Tabs.TabPane title='加签' name='a'></Tabs.TabPane>
+          <Tabs.TabPane title='验签' name='b'></Tabs.TabPane>
         </Tabs>
       </Cell.Group>
-      <div className='encrypt-setion2'>
+      <div className='sign-setion2'>
         {/* 小屏展示 */}
         <div className="input-box input-box--middle">
           <Cell.Group card>
@@ -156,7 +157,7 @@ const Encrypt = () => {
                 required
                 clearable
                 value={data}
-                placeholder="请填写数据"
+                placeholder="请填写数据（必须为 JSON 对象格式）"
                 onChange={setData}
               ></Field>
             </Cell>
@@ -165,7 +166,7 @@ const Encrypt = () => {
               <Button type="primary" size="small" block round onClick={handleStartClick}>开始</Button>
             </Cell>
             {/* 结果 */}
-            <Cell title="结果" label={ type === 'a' ? '加密结果' : '解密结果' }>
+            <Cell title="结果" label={ type === 'a' ? '加签结果' : '验签结果' }>
               <Field
                 type="textarea"
                 autosize={{ minHeight: 80, maxHeight: 300 }}
@@ -200,7 +201,7 @@ const Encrypt = () => {
                 required
                 clearable
                 value={data}
-                placeholder="请填写数据"
+                placeholder="请填写数据（必须为 JSON 对象格式）"
                 onChange={setData}
               ></Field>
             </Cell>
@@ -211,7 +212,7 @@ const Encrypt = () => {
           </Cell.Group>
           <Cell.Group card className="right">
             {/* 结果 */}
-            <Cell title="结果" label={ type === 'a' ? '加密结果' : '解密结果' }>
+            <Cell title="结果" label={ type === 'a' ? '加签结果' : '验签结果' }>
               <Field
                 type="textarea"
                 autosize={{ minHeight: 350, maxHeight: 560 }}
@@ -239,4 +240,4 @@ const Encrypt = () => {
   )
 }
 
-export default Encrypt;
+export default Sign;

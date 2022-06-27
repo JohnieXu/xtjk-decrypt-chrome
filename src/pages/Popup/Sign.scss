@@ -1,0 +1,60 @@
+$background-color: rgb(247, 248, 250);
+
+.sign {
+  background: $background-color;
+  --rv-cell-large-title-font-size: var(--rv-font-size-md);
+  --rv-cell-large-label-font-size: var(--rv-font-size-sm);
+}
+
+.sign-section1 {
+  margin-top: 12px;
+  .rv-cell-group {
+    background: transparent;
+  }
+}
+
+.sign-setion2 {
+  margin-top: 12px;
+  .input-box {
+    .rv-cell__title {
+      flex: 0 0 60px;
+    }
+    .rv-cell__value {
+      word-break: break-all;
+    }
+  }
+  .input-box--middle {
+    @media screen and (min-width: 1000px) {
+      display: none;
+    }
+  }
+  .input-box--wide {
+    @media screen and (max-width: 999px) {
+      display: none;
+    }
+    display: flex;
+    flex-direction: row;
+    .left {
+      width: 40%;
+      flex: 0 0 40%;
+    }
+    .right {
+      width: 50%;
+      flex: 1;
+      .rv-cell-group--inset {
+        margin-left: 0;
+      }
+    }
+  }
+  .cell-button {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    & > .rv-cell__value > .rv-button {
+      max-width: 180px;
+      margin: 0 auto;
+      @media screen and (max-width: 400px){
+        max-width: 80%;
+      }
+    }
+  }
+}

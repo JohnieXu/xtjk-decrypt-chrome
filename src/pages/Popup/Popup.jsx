@@ -4,6 +4,7 @@ import { Button } from 'react-vant';
 import XHeader from '../../components/Header';
 import XSideMenu from '../../components/SideMenu';
 import Encrypt from './Encrypt';
+import Sign from './Sign';
 import History from './History';
 import KeyManage from './KeyManage';
 import Favorite from './Favorite';
@@ -17,6 +18,11 @@ const MENUS = [
   {
     name: 'encrypt',
     label: '加解密',
+    to: true
+  },
+  {
+    name: 'sign',
+    label: '加签验签',
     to: true
   },
   {
@@ -81,6 +87,7 @@ const Popup = () => {
       <Routes>
         <Route path="/" element={<App />}>
           <Route path="encrypt" element={<Encrypt />}></Route>
+          <Route path="sign" element={<Sign />}></Route>
           <Route path="history" element={<History />}></Route>
           <Route path="keyManage" element={<KeyManage />}></Route>
           <Route path="favorite" element={<Favorite />}></Route>
